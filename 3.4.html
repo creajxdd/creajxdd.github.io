@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi Proyecto de Vida</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Estilos para el chatbot */
+    #openChatBtn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+      z-index: 999;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    #chatbot {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 300px;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      font-family: sans-serif;
+      display: none;
+      flex-direction: column;
+      z-index: 1000;
+    }
+
+    #chatHeader {
+      background: #4CAF50;
+      color: white;
+      padding: 10px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 10px 10px 0 0;
+    }
+
+    #chatHeader button {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #chatBody {
+      padding: 10px;
+      max-height: 250px;
+      overflow-y: auto;
+    }
+
+    #userInput {
+      width: 75%;
+      padding: 5px;
+      margin: 10px 5px;
+    }
+
+    #sendBtn {
+      padding: 6px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .message {
+      margin: 5px 0;
+    }
+
+    .user {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .bot {
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Mi Proyecto de Vida</h1>
+    <p>Construyendo un futuro con propósito y acción</p>
+  </header>
+
+  <main>
+    <h2 onclick="toggle('economico')">💰 Estrategias Económicas</h2>
+    <section id="economico">
+      <ul>
+        <li>Ahorro mensual del 20% de ingresos</li>
+        <li>Inversión en fondos indexados a largo plazo</li>
+        <li>Crear un negocio de servicios digitales</li>
+        <li>Educación financiera continua</li>
+      </ul>
+    </section>
+
+    <h2 onclick="toggle('estudios')">📚 Planes de Estudio</h2>
+    <section id="estudios">
+      <ul>
+        <li>Terminar la carrera universitaria en 2026</li>
+        <li>Certificación en programación web</li>
+        <li>Curso de inglés avanzado (C1)</li>
+        <li>Leer un libro de desarrollo personal cada mes</li>
+      </ul>
+    </section>
+
+    <h2 onclick="toggle('social')">🤝 Servicios Sociales</h2>
+    <section id="social">
+      <ul>
+        <li>Participar en campañas de reforestación</li>
+        <li>Voluntariado en comedores comunitarios</li>
+        <li>Crear talleres gratuitos de habilidades digitales</li>
+        <li>Promover actividades deportivas en mi comunidad</li>
+      </ul>
+    </section>
+  </main>
+
+  <section>
+    <h2>📝 Guardar Proyecto de Vida</h2>
+    <form id="vidaForm">
+      <label>Nombre: <input type="text" name="nombre" required></label><br><br>
+      <label>Meta Académica: <input type="text" name="academica" required></label><br><br>
+      <label>Estrategia Económica: <input type="text" name="economica" required></label><br><br>
+      <label>Servicio Social: <input type="text" name="social" required></label><br><br>
+      <button type="submit">Guardar</button>
+    </form>
+    <p id="respuesta"></p>
+  </section>
+
+  <!-- Botón flotante para abrir el chat -->
+  <button id="openChatBtn" onclick="openChat()">💬</button>
+
+  <!-- Contenedor del chatbot -->
+  <div id="chatbot">
+    <div id="chatHeader">
+      <span>🤖 Chatbot</span>
+      <button onclick="closeChat()">×</button>
+    </div>
+    <div id="chatBody">
+      <div class="message bot">Hola, ¿en qué puedo ayudarte hoy?</div>
+    </div>
+    <div style="display: flex; align-items: center; padding: 5px 10px;">
+      <input type="text" id="userInput" placeholder="Escribe tu pregunta..." />
+      <button id="sendBtn" onclick="sendMessage()">Enviar</button>
+    </div>
+  </div>
+
+  <script>
+    function openChat() {
+      document.getElementById('chatbot').style.display = 'flex';
+      document.getElementById('openChatBtn').style.display = 'none';
+    }
+
+    function closeChat() {
+      document.getElementById('chatbot').style.display = 'none';
+      document.getElementById('openChatBtn').style.display = 'block';
+    }
+
+    function toggle(id) {
+      const section = document.getElementById(id);
+      section.classList.toggle('activo');
+    }
+
+    function sendMessage() {
+      const input = document.getElementById('userInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const chatBody = document.getElementById('chatBody');
+
+      // Agregar mensaje del usuario
+      chatBody.innerHTML += `<div class="message user">Tú: ${text}</div>`;
+
+      // Simular respuesta del chatbot
+      let response = getAIResponse(text);
+      chatBody.innerHTML += `<div class="message bot">IA: ${response}</div>`;
+
+      chatBody.scrollTop = chatBody.scrollHeight;
+      input.value = "";
+    }
+
+    function getAIResponse(input) {
+      input = input.toLowerCase();
+      if (input.includes("finanzas")) return "Puedes mejorar tus finanzas haciendo un presupuesto y ahorrando cada mes.";
+      if (input.includes("plan de estudio")) return "Un plan de estudios define qué materias y habilidades necesitas aprender.";
+      if (input.includes("servicio social")) return "El servicio social permite aplicar tus conocimientos en beneficio de la comunidad.";
+      if (input.includes("hola")) return "¡Hola! ¿En qué puedo ayudarte?";
+      return "Interesante, ¿puedes explicarlo un poco más?";
+    }
+  </script>
+</body>
+</html>
+<div class="message bot">
+    Mas consejos sobre un futuro <br>
+    Aqui hay mas info sobre:
+    <ul>
+      <li><a href="https://www.ejemplo.com/economia" target="_blank">Estrategias económicas</a></li>
+      <li><a href="https://www.ejemplo.com/estudio" target="_blank">Plan de estudios</a></li>
+      <li><a href="https://www.ejemplo.com/social" target="_blank">Servicios sociales</a></li>
+    </ul>
+  </div>
+  
